@@ -1,7 +1,7 @@
 import tkinter.filedialog as filedialog
 import tkinter as tk
 from tkinter import ttk
-import sv_ttk
+import sv_ttk #pip install sv_ttk
 
 # Initialize root window
 root = tk.Tk()
@@ -19,10 +19,13 @@ dir_label = ttk.Label(frame, text="Directory:")
 dir_label.grid(row=0, column=0, sticky="w", padx=5, pady=(5, 0))
 
 dir_entry = ttk.Entry(frame)
-dir_entry.grid(row=1, column=0, padx=5, pady=5)
+dir_entry.grid(row=1, column=0, sticky="ew", padx=5, pady=5)
 
 dir_btn = ttk.Button(frame, text="Browse")
 dir_btn.grid(row=1, column=1, sticky="w", padx=5, pady=5)
+
+spacer = ttk.Frame(frame, width=300)
+spacer.grid(row=2, column=0)
 
 #Sorting section
 sort_frame = ttk.Frame(frame)
