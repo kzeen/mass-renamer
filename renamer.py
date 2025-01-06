@@ -1,7 +1,22 @@
-import tkinter.filedialog as filedialog
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 import sv_ttk #pip install sv_ttk
+
+# User functions
+
+def on_submit():
+    user_dir = dir_entry.get()
+    user_format = format_entry.get()
+    if not validate_required_fields(user_dir, user_format):
+        messagebox.showerror("Invalid Input", "Please fill out all required fields")
+    else:
+        pass
+
+def validate_required_fields(dir_field, format_field):
+    if dir_field and format_field:
+        return True
+    return False
 
 # Initialize root window
 root = tk.Tk()
@@ -15,7 +30,7 @@ frame.grid(row=0, column=0, sticky="nsew")
 #Configure widgets
 
 #Directory section
-dir_label = ttk.Label(frame, text="Directory:")
+dir_label = ttk.Label(frame, text="Directory: *")
 dir_label.grid(row=0, column=0, sticky="w", padx=5, pady=(5, 0))
 
 dir_entry = ttk.Entry(frame)
@@ -42,7 +57,7 @@ sort_dropdown.grid(row=0, column=1, sticky="w", padx=5)
 format_frame = ttk.Frame(frame)
 format_frame.grid(row=3, column=0, columnspan=2, sticky="w", padx=5, pady=(15, 5))
 
-format_label1 = ttk.Label(format_frame, text="Set the naming format to follow:")
+format_label1 = ttk.Label(format_frame, text="Set the naming format to follow: *")
 format_label2 = ttk.Label(format_frame, text="(Place %xx% where you want sequence to start)", font=("Helvetica", 8, "italic"))
 format_label1.grid(row=0, column=0, sticky="w")
 format_label2.grid(row=1, column=0, sticky="w")
@@ -51,18 +66,27 @@ format_entry = ttk.Entry(format_frame)
 format_entry.grid(row=2, column=0, sticky="w", pady=(5, 0))
 
 #Start sequence section
-seq_label = ttk.Label(frame, text="Start of sequence:")
-seq_label.grid(row=4, column=0, sticky="w", padx=5, pady=(15, 5))
+seq_label1 = ttk.Label(frame, text="Start of sequence:")
+seq_label2 = ttk.Label(frame, text="(Default is 01)", font=("Helvetica", 8, "italic"))
+seq_label1.grid(row=4, column=0, sticky="w", padx=5, pady=(15, 0))
+seq_label2.grid(row=5, column=0, sticky="w", padx=5, pady=(0, 5))
 
 seq_entry = ttk.Entry(frame)
-seq_entry.grid(row=5, column=0, sticky="w", padx=5)
+seq_entry.grid(row=6, column=0, sticky="w", padx=5)
 
 #Done button
 done_frame = ttk.Frame(root)
-done_frame.grid(row=1, column=0, pady=20)
+done_frame.grid(row=1, column=0, pady=(20, 5))
 
-done_btn = ttk.Button(done_frame, text="Done")
+done_btn = ttk.Button(done_frame, text="Done", command=on_submit)
 done_btn.grid(row=0, column=0)
+
+#Required field
+req_msg_frame = ttk.Frame(root)
+req_msg_frame.grid(row=2, column=0, sticky="w", pady=(0, 15))
+
+req_msg_label = ttk.Label(req_msg_frame, text="'*' designates required fields", font=("Helvetica", 8, "bold italic"))
+req_msg_label.grid(row=0, column=0, sticky="w")
 
 # Set dark theme
 sv_ttk.set_theme("dark")
