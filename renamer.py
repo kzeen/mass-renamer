@@ -1,10 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
+from tkinter import filedialog
 import sv_ttk #pip install sv_ttk
 
 # User functions
-
 def on_submit():
     user_dir = dir_entry.get()
     user_format = format_entry.get()
@@ -17,6 +17,11 @@ def validate_required_fields(dir_field, format_field):
     if dir_field and format_field:
         return True
     return False
+
+def getDir():
+    user_dir = tk.filedialog.askdirectory() # Open dialog box and get directory
+    dir_entry.delete(0, tk.END) # Delete any previous text found in entry
+    dir_entry.insert(0, user_dir) # Insert new selected directory in entry
 
 # Initialize root window
 root = tk.Tk()
@@ -36,7 +41,7 @@ dir_label.grid(row=0, column=0, sticky="w", padx=5, pady=(5, 0))
 dir_entry = ttk.Entry(frame)
 dir_entry.grid(row=1, column=0, sticky="ew", padx=5, pady=5)
 
-dir_btn = ttk.Button(frame, text="Browse")
+dir_btn = ttk.Button(frame, text="Browse", command=getDir)
 dir_btn.grid(row=1, column=1, sticky="w", padx=5, pady=5)
 
 spacer = ttk.Frame(frame, width=300)
