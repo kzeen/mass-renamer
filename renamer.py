@@ -72,7 +72,7 @@ def renameFiles(path_to_files, format, sorted_files, file_type, subtitle_ext = "
 
 
 # User functions
-def on_submit():
+def on_submit(event = None):
     user_dir = dir_entry.get()
     user_format = format_entry.get()
 
@@ -146,6 +146,8 @@ done_frame.grid(row=1, column=0, pady=(20, 5))
 
 done_btn = ttk.Button(done_frame, text="Done", command=on_submit)
 done_btn.grid(row=0, column=0)
+
+done_btn.bind("<Return>", on_submit)
 
 #Required field
 req_msg_frame = ttk.Frame(root)
