@@ -3,18 +3,103 @@ from tkinter import ttk
 from tkinter import messagebox
 from tkinter import filedialog
 import sv_ttk #pip install sv_ttk
+import os
+
+# Private functions
+def accessFiles(path_to_files, format):
+    # Make sure directory is valid and path exists
+    if path_exists(path_to_files):
+        # Get all files in directory and place them in list "files"
+        files = os.listdir(path_to_files)
+
+        # Sort the files alphabetically
+        sorted_files = sorted(files)
+
+        # Find the file type of the video files
+        # We make 2 assumptions:
+            # 1. All video files can either be mp4 or mkv only
+            # 2. There will never be mp4 video files and mkv video files in the same directory
+        file_type = ".mp4"
+        for file in sorted_files:
+            if file.endswith(".mkv"):
+                file_type = ".mkv"
+                break
+
+        # Check if there are any subtitle files
+        has_subtitles = False
+        for file in sorted_files:
+            if file.endswith(".srt"):
+                has_subtitles = True
+                break
+
+        # Rename the video files
+        renameFiles(path_to_files, format, sorted_files, file_type, False)
+
+        # Show success message
+        if has_subtitles:
+            # Rename subtitle files first
+            renameFiles(path_to_files, format, sorted_files, ".srt", True)
+            messagebox.showinfo("Success", "All video and subtitle files have been renamed successfully")
+        else:
+            messagebox.showinfo("Success", "All video files have been renamed successfully")
+    else:
+        messagebox.showerror("Invalid path", "The directory path you provided is invalid")
+
+def renameFiles(path_to_files, format, sorted_files, file_type, are_subtitles):
+    start_sequence = 1
+
+    for file in sorted_files:
+        if file.endswith(file_type):
+            # To have a consistent format, ex: E01, E02, ..., E10, etc.
+            if start_sequence < 10:
+                replace_with = "0" + str(start_sequence)
+            else:
+                replace_with = str(start_sequence)
+            
+            try:
+                # Renaming using absolute paths to be extra sure
+                if not are_subtitles:
+                    os.rename(path_to_files + "\\" + file, path_to_files + "\\" + format.replace("%xx%", replace_with) + file_type)
+                else:
+                    # Add .eng pre-extension as most subtitles are english in my case
+                    os.rename(path_to_files + "\\" + file, path_to_files + "\\" + format.replace("%xx%", replace_with) + ".eng" + file_type)
+                print("File renamed successfully: " + file) # For debugging
+            except FileNotFoundError:
+                messagebox.showerror("File Not Found", "The file does not exist")
+                break
+            except PermissionError:
+                messagebox.showerror("Permission Error", "You do not have permission to rename this file")
+                break
+            except OSError as e:
+                messagebox.showerror("OS Error", "An error occurred while renaming the file: " + str(e))
+                break
+
+            # Increment sequence by 1
+            start_sequence += 1
+        else:
+            continue
+
 
 # User functions
 def on_submit():
     user_dir = dir_entry.get()
     user_format = format_entry.get()
+
     if not validate_required_fields(user_dir, user_format):
         messagebox.showerror("Invalid Input", "Please fill out all required fields")
     else:
-        pass
+        user_sort = sort_dropdown.get() # Redundant, remove next
+        user_sequence = seq_entry.get() # Redundant, remove next
+
+        accessFiles(user_dir, user_format)
 
 def validate_required_fields(dir_field, format_field):
     if dir_field and format_field:
+        return True
+    return False
+
+def path_exists(dir_path):
+    if os.path.exists(dir_path):
         return True
     return False
 
