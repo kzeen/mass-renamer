@@ -88,7 +88,6 @@ def on_submit():
     if not validate_required_fields(user_dir, user_format):
         messagebox.showerror("Invalid Input", "Please fill out all required fields")
     else:
-        user_sort = sort_dropdown.get() # Redundant, remove next
         user_sequence = seq_entry.get() # Redundant, remove next
 
         accessFiles(user_dir, user_format)
@@ -131,17 +130,6 @@ dir_btn.grid(row=1, column=1, sticky="w", padx=5, pady=5)
 
 spacer = ttk.Frame(frame, width=300)
 spacer.grid(row=2, column=0)
-
-#Sorting section
-sort_frame = ttk.Frame(frame)
-sort_frame.grid(row=2, column=0, sticky="w", padx=5, pady=(15, 5))
-
-sort_label = ttk.Label(sort_frame, text="Sort by:")
-sort_label.grid(row=0, column=0, sticky="w")
-
-sort_dropdown = ttk.Combobox(sort_frame, state="readonly", values=["Name", "Date", "Size"], width=5)
-sort_dropdown.set("Name") #Selected by default
-sort_dropdown.grid(row=0, column=1, sticky="w", padx=5)
 
 #Format section
 format_frame = ttk.Frame(frame)
