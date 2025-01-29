@@ -4,6 +4,10 @@ from tkinter import messagebox
 from tkinter import filedialog
 import sv_ttk #pip install sv_ttk
 import os
+import json
+
+with open("config.json") as f:
+    configs = json.load(f)
 
 # Private functions
 def accessFiles(path_to_files, format, subtitle_extension):
@@ -93,7 +97,7 @@ def path_exists(dir_path):
     return False
 
 def getDir():
-    user_dir = tk.filedialog.askdirectory() # Open dialog box and get directory
+    user_dir = tk.filedialog.askdirectory(initialdir=configs["initial_directory"]) # Open dialog box and get directory
     dir_entry.delete(0, tk.END) # Delete any previous text found in entry
     dir_entry.insert(0, user_dir) # Insert new selected directory in entry
 
